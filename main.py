@@ -38,7 +38,7 @@ def calculate_number_by_date(date):
         total = sum(int(c) for c in str(total))
     return total
 
-@app.route('/today')
+@app.route('/')
 def today_forecast():
     tz = request.args.get('tz', 'UTC')
     try:
