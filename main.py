@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from datetime import datetime
 from openai import OpenAI
 import os
@@ -7,10 +7,10 @@ import pytz
 
 app = Flask(__name__)
 
-# 🔐 OpenAI клиент
+# 🔐 Подключение OpenAI
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-# Базовые тексты по числам (добавь свои позже)
+# Тексты по числам
 base_texts = {
     1: "Ты — лидер. Действуй смело.",
     2: "Слушай и будь внимательным.",
@@ -23,7 +23,7 @@ base_texts = {
     9: "Пора подвести итоги. Идёт завершение цикла.",
 }
 
-# Картинки по числам (пока заглушки)
+# Картинки по числам
 images = {
     1: ["https://via.placeholder.com/300x200.png?text=1A", "https://via.placeholder.com/300x200.png?text=1B"],
     2: ["https://via.placeholder.com/300x200.png?text=2A"],
@@ -36,16 +36,21 @@ images = {
     9: ["https://via.placeholder.com/300x200.png?text=9A"],
 }
 
-# 🔢 Расчёт числа из даты
+# Число по дате
 def calculate_number_by_date(date):
     total = sum(int(c) for c in date.strftime("%d%m%Y"))
     while total > 22:
         total = sum(int(c) for c in str(total))
     return total if total in base_texts else 1
 
-@app.route("/today")
+# Главная страница (отдаёт index.html)
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
+
+# Прогноз
+@app.route('/today')
 def today_forecast():
-    # Получаем часовой пояс из запроса
     tz_name = request.args.get("tz", "UTC")
     try:
         user_tz = pytz.timezone(tz_name)
@@ -57,7 +62,6 @@ def today_forecast():
     base_text = base_texts.get(number, "Нейтральный день.")
     image_url = random.choice(images.get(number, ["https://via.placeholder.com/300x200.png?text=Default"]))
 
-    # Запрос к OpenAI
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -77,7 +81,7 @@ def today_forecast():
         "image": image_url
     })
 
-# 🟢 Запуск для Render
-if __name__ == "__main__":
+# Запуск на Render
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host='0.0.0.0', port=port)
