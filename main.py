@@ -64,5 +64,8 @@ def today_forecast():
     """
     return render_template_string(html_template)
 
+import os
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    port = int(os.environ.get("PORT", 5000))  # Render передаёт PORT из переменной окружения
+    app.run(host="0.0.0.0", port=port)
