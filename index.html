@@ -7,24 +7,43 @@
   <style>
     body {
       font-family: sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 50px;
+      background-color: #f9f9f9;
     }
     h1 {
-      font-size: 24px;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.4;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h1>Загружаем твой магический прогноз...</h1>
+  <h1>Загружаем магию...</h1>
 
   <script>
-    // Получаем часовой пояс
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    // Перенаправляем на /today с параметром tz
-    const targetUrl = "/today?tz=" + encodeURIComponent(timezone);
-    window.location.href = targetUrl;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    fetch("/today?tz=" + encodeURIComponent(tz))
+      .then(res => res.json())
+      .then(data => {
+        document.body.innerHTML = `
+          <h1>🔮 Прогноз на ${data.date}</h1>
+          <img src="${data.image}" alt="Прогноз" />
+          <p>${data.text}</p>
+        `;
+      })
+      .catch(err => {
+        document.body.innerHTML = `<p>Ошибка загрузки прогноза. Попробуйте позже.</p>`;
+      });
   </script>
 </body>
 </html>
