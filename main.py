@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from openai import OpenAI
 import os
 import random
@@ -39,6 +39,10 @@ def calculate_number_by_date(date):
     return total
 
 @app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/today')
 def today_forecast():
     tz = request.args.get('tz', 'UTC')
     try:
@@ -110,3 +114,4 @@ def send_button(chat_id):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
