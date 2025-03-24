@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Прогноз на день</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Загружаем твой магический прогноз...</h1>
+
+  <script>
+    // Получаем часовой пояс
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Перенаправляем на /today с параметром tz
+    const targetUrl = "/today?tz=" + encodeURIComponent(timezone);
+    window.location.href = targetUrl;
+  </script>
+</body>
+</html>
