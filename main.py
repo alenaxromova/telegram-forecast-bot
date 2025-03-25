@@ -42,6 +42,10 @@ def calculate_number_by_date(date):
 def index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/auth.html')
+def auth_html():
+    return send_from_directory('.', 'auth.html')
+
 @app.route('/today')
 def today_forecast():
     tz = request.args.get('tz', 'UTC')
