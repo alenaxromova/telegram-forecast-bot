@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Авторизация</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding: 40px;">
+  <h2>Авторизация...</h2>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    fetch('/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: tg.initDataUnsafe.user.id,
+        first_name: tg.initDataUnsafe.user.first_name,
+        username: tg.initDataUnsafe.user.username,
+        chat_id: tg.initDataUnsafe.chat.id
+      })
+    })
+    .then(() => {
+      document.body.innerHTML = "<h2>✅ Вы авторизованы</h2>";
+    })
+    .catch(() => {
+      document.body.innerHTML = "<h2>⚠️ Ошибка авторизации</h2>";
+    });
+  </script>
+</body>
+</html>
